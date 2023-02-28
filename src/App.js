@@ -6,6 +6,15 @@ function App() {
   const [newExercise, setNewExercise] = useState("");
   const [exercises, setExercises] = useState([]);
 
+  const getExercises = () => {
+    fetch(`http://127.0.0.1:5002/exercises`)
+      .then((res) => res.json())
+      .then((data) => {
+        setExercises(data);
+      })
+      .catch(alert);
+  };
+
   // Helper functions
 
   function addExercise() {
@@ -17,8 +26,6 @@ function App() {
       id: Math.floor(Math.random() * 1000),
       value: newExercise,
     };
-
-    setExercises((oldList) => [...oldList, exercise]);
 
     // Reset newExercise back to original state
     setNewExercise("");
@@ -41,14 +48,15 @@ function App() {
         value={newExercise}
         onChange={(e) => setNewExercise(e.target.value)}
       />
-      <button onClick={() => addExercise()}>Add</button>
+      <button onClick={() => getExercises()}>Get</button>
+      <button onClick={() => addExercise()}>😍</button>
       {/* List of exercises (unordered list with list of exercises */}
       <ul>
         {exercises.map((exercise) => {
           return (
             <div>
               <li key={exercise.id}>
-                {exercise.value}
+                {exercise.dow} {exercise.exercise} {exercise.reps}
                 <button onClick={() => deleteExercise(exercise.id)}>🙅</button>
               </li>
             </div>
