@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./App.css";
-import { auth, authenticate, logout } from "./firebase/firebase";
+import {
+  auth,
+  authenticateWithGoogle,
+  authenticateWithEmail,
+  logout,
+} from "./firebase/firebase";
 
 const host = "https://final-project-ed875.web.app";
 
@@ -10,8 +15,10 @@ function App() {
   // State hook - useState
   const [newExercise, setNewExercise] = useState("");
   const [newDow, setNewDow] = useState("");
-  const [newReps, setNewReps] = useState("");
+  const [newReps, setNewReps] = useState(""); // should be a number since that is the data type
   const [exercises, setExercises] = useState([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Helper functions
 
@@ -101,7 +108,29 @@ function App() {
   if (!user) {
     return (
       <div>
-        <button onClick={() => authenticate()}>Sign In</button>
+        <h1>Login with Email and Password</h1>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          onClick={() => authenticateWithEmail(email, password, "signIn")}
+        >
+          Sign In
+        </button>
+        <button
+          onClick={() => authenticateWithEmail(email, password, "signUp")}
+        >
+          Sign Up
+        </button>
+        <h1>Login with Google</h1>
+        <button onClick={() => authenticateWithGoogle()}>Sign In</button>
       </div>
     );
   }
@@ -125,6 +154,7 @@ function App() {
         onChange={(e) => setNewDow(e.target.value)}
       />
       <input
+        min={1} // fixed no negative numbers
         type="number"
         placeholder="reps"
         value={newReps}

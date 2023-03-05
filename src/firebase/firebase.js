@@ -3,6 +3,8 @@ import {
   GoogleAuthProvider,
   getAuth,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import {
@@ -18,14 +20,27 @@ import {
 } from "firebase/firestore";
 import firebaseConfig from "./firebase.config";
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig); //initializes a Firebase app using the "initializeApp()"" function and a configuration object called "firebaseConfig"
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 const googleProvider = new GoogleAuthProvider();
 
-async function authenticate() {
+async function authenticateWithGoogle() {
   await signInWithPopup(auth, googleProvider);
+}
+
+async function authenticateWithEmail(email, password, type) {
+  switch (type) {
+    case "signIn":
+      await signInWithEmailAndPassword(auth, email, password);
+      return;
+    case "signUp":
+      await createUserWithEmailAndPassword(auth, email, password);
+      return;
+    default:
+      throw new Error("invalid type");
+  }
 }
 
 async function logout() {
@@ -54,4 +69,11 @@ function getExercises() {
   });
 }
 
-export { authenticate, logout, auth, addExercise, getExercises };
+export {
+  authenticateWithGoogle,
+  authenticateWithEmail,
+  logout,
+  auth,
+  addExercise,
+  getExercises,
+};
