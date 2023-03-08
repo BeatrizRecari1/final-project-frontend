@@ -9,6 +9,7 @@ import {
 } from "./firebase/firebase";
 
 const host = "https://final-project-ed875.web.app";
+// const host = "http://localhost:5002";
 
 function App() {
   const [user, loadingUser] = useAuthState(auth);
@@ -19,6 +20,7 @@ function App() {
   const [exercises, setExercises] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rocketAnimating, setRocketAnimating] = useState(false);
 
   // Helper functions
 
@@ -27,12 +29,17 @@ function App() {
       alert("Enter an exercise!");
       return;
     }
+    setRocketAnimating(true);
+    setTimeout(() => {
+      setRocketAnimating(false);
+    }, 7000);
     const exercise = {
       exercise: newExercise,
       dow: newDow,
       reps: newReps,
+      owner: user.uid,
     };
-    fetch(`${host}/exercises`, {
+    fetch(`${host}/exercises/${user.uid}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(exercise),
@@ -64,7 +71,7 @@ function App() {
   // Deletes an item based on the exercise id
   function deleteExercise(id) {
     console.log(id);
-    fetch(`${host}/exercises/${id}`, {
+    fetch(`${host}/exercises/${user.uid}/${id}`, {
       method: "DELETE",
       // headers: { "Content-Type": "application/json" },
     })
@@ -78,7 +85,7 @@ function App() {
   }
 
   function markExerciseDone(id) {
-    fetch(`${host}/exercises/${id}`, {
+    fetch(`${host}/exercises/${user.uid}/${id}`, {
       method: "PATCH",
       // headers: { "Content-Type": "application/json" },
     })
@@ -91,7 +98,8 @@ function App() {
 
   useEffect(() => {
     const getExercises = () => {
-      fetch(`${host}/exercises`)
+      if (!user) return;
+      fetch(`${host}/exercises/${user.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setExercises(data);
@@ -99,7 +107,7 @@ function App() {
         .catch(alert);
     };
     getExercises();
-  }, []);
+  }, [user]);
 
   if (loadingUser) {
     return <div>Loading...</div>;
@@ -134,10 +142,14 @@ function App() {
       </div>
     );
   }
-
+  console.log(exercises);
   return (
     <div className="app">
-      <button onClick={logout}>Log out</button>
+      <div className="top-bar">
+        <button className="logout-button" onClick={logout}>
+          Log out
+        </button>
+      </div>
       {/* Header */}
       <h1>Today's Practice Plan</h1>
       {/* Input (input and button) */}
@@ -147,12 +159,22 @@ function App() {
         value={newExercise}
         onChange={(e) => setNewExercise(e.target.value)}
       />
-      <input
+      {/* <input
         type="text"
         placeholder="Day of the week"
         value={newDow}
         onChange={(e) => setNewDow(e.target.value)}
-      />
+      /> */}
+      <select value={newDow} onChange={(e) => setNewDow(e.target.value)}>
+        <option></option>
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
+      </select>
       <input
         min={1} // fixed no negative numbers
         type="number"
@@ -161,29 +183,39 @@ function App() {
         onChange={(e) => setNewReps(e.target.value)}
       />
       {/* <button onClick={}>Get</button> */}
-      <button onClick={() => addExercise()}>🚀</button>
+      <button
+        className={["todo-button", "rocket", rocketAnimating && "animateRocket"]
+          .filter((e) => e)
+          .join(" ")}
+        onClick={() => addExercise()}
+      >
+        🚀
+      </button>
       {/* List of exercises (unordered list with list of exercises */}
       <ul>
         {exercises.map((exercise) => {
-          console.log(exercise);
           return (
-            <div>
-              <li key={exercise.id}>
-                <span
-                  style={{
-                    textDecoration: exercise.done ? "line-through" : undefined,
-                  }}
-                >
-                  {exercise.dow} {exercise.exercise} {exercise.reps}
-                </span>
-                <button onClick={() => markExerciseDone(exercise.exercisesID)}>
-                  ✅
-                </button>
-                <button onClick={() => deleteExercise(exercise.exercisesID)}>
-                  🙅
-                </button>
-              </li>
-            </div>
+            <li className="exercise" key={exercise.id}>
+              <span
+                style={{
+                  textDecoration: exercise.done ? "line-through" : undefined,
+                }}
+              >
+                {exercise.dow} {exercise.exercise} {exercise.reps}
+              </span>
+              <button
+                className="update-button"
+                onClick={() => markExerciseDone(exercise.exercisesID)}
+              >
+                ✅
+              </button>
+              <button
+                className="delete-button"
+                onClick={() => deleteExercise(exercise.exercisesID)}
+              >
+                🙅
+              </button>
+            </li>
           );
         })}
       </ul>
