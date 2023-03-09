@@ -1,0 +1,64 @@
+.credentials-page .main-content {
+    width: 90vw;
+    max-width: initial;
+    flex-direction: row;
+    background-color: initial;
+}
+
+.credentials-page .main-content .column {
+    flex-basis: 0;
+    min-width: 0;
+    flex-grow: 1;
+
+}
+
+.credentials-page .input {
+    flex-grow: initial;
+    min-width: initial;
+    flex-basis: initial;
+
+}
+
+.credentials {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 2em;
+    /* background-color: rgb(13, 13, 39); */
+    padding: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5em;
+}
+
+.action-buttons button {
+    flex-basis: 0;
+    min-width: 0;
+    flex-grow: 1;
+    padding: 1em;
+   
+    font-size: 1rem;
+}
+
+.icon {
+    height: 1em;
+
+}
+
+.google-signin {
+    align-self: center;
+    align-items: center;
+    display: flex;
+    padding: 1em;
+    gap: 1em;
+    font-size: 1rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

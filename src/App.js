@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./App.css";
+import "./Splash.css";
 import {
   auth,
   authenticateWithGoogle,
   authenticateWithEmail,
   logout,
 } from "./firebase/firebase";
+import logo from "./logo.png";
 
 const host = "https://final-project-ed875.web.app";
 // const host = "http://localhost:5002";
@@ -44,6 +46,7 @@ function App() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(exercise),
     })
+      // This is a method chain on a Promise object that is returned from an HTTP request in JavaScript.
       .then((res) => res.json())
       .then((data) => {
         setExercises(data);
@@ -115,30 +118,52 @@ function App() {
 
   if (!user) {
     return (
-      <div>
-        <h1>Login with Email and Password</h1>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          onClick={() => authenticateWithEmail(email, password, "signIn")}
-        >
-          Sign In
-        </button>
-        <button
-          onClick={() => authenticateWithEmail(email, password, "signUp")}
-        >
-          Sign Up
-        </button>
-        <h1>Login with Google</h1>
-        <button onClick={() => authenticateWithGoogle()}>Sign In</button>
+      <div className="app credentials-page">
+        <div className="main-content">
+          <div className="logo-container column">
+            <img src={logo} />
+          </div>
+          <div className="credentials column">
+            <h1 className="main-title">Login</h1>
+            <input
+              className="input"
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              className="input"
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="action-buttons">
+              <button
+                onClick={() => authenticateWithEmail(email, password, "signIn")}
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => authenticateWithEmail(email, password, "signUp")}
+              >
+                Sign Up
+              </button>
+            </div>
+            <hr />
+            <button
+              className="google-signin"
+              onClick={() => authenticateWithGoogle()}
+            >
+              <span>Sign In With</span>
+              <img
+                className="icon"
+                src="https://tabler-icons.io/static/tabler-icons/icons/brand-google.svg"
+              />
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -150,75 +175,96 @@ function App() {
           Log out
         </button>
       </div>
-      {/* Header */}
-      <h1>Today's Practice Plan</h1>
-      {/* Input (input and button) */}
-      <input
-        type="text"
-        placeholder="Add an exercise..."
-        value={newExercise}
-        onChange={(e) => setNewExercise(e.target.value)}
-      />
-      {/* <input
+      <div className="main-content">
+        {/* Header */}
+        <h1 className="main-title">Today's Practice Plan</h1>
+        <div className="input-controls">
+          {/* Input (input and button) */}
+          <input
+            className="input"
+            type="text"
+            placeholder="Add an exercise..."
+            value={newExercise}
+            onChange={(e) => setNewExercise(e.target.value)}
+          />
+          {/* <input
         type="text"
         placeholder="Day of the week"
         value={newDow}
         onChange={(e) => setNewDow(e.target.value)}
       /> */}
-      <select value={newDow} onChange={(e) => setNewDow(e.target.value)}>
-        <option></option>
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
-        <option>Sunday</option>
-      </select>
-      <input
-        min={1} // fixed no negative numbers
-        type="number"
-        placeholder="reps"
-        value={newReps}
-        onChange={(e) => setNewReps(e.target.value)}
-      />
-      {/* <button onClick={}>Get</button> */}
-      <button
-        className={["todo-button", "rocket", rocketAnimating && "animateRocket"]
-          .filter((e) => e)
-          .join(" ")}
-        onClick={() => addExercise()}
-      >
-        🚀
-      </button>
-      {/* List of exercises (unordered list with list of exercises */}
-      <ul>
-        {exercises.map((exercise) => {
-          return (
-            <li className="exercise" key={exercise.id}>
-              <span
-                style={{
-                  textDecoration: exercise.done ? "line-through" : undefined,
-                }}
-              >
-                {exercise.dow} {exercise.exercise} {exercise.reps}
-              </span>
-              <button
-                className="update-button"
-                onClick={() => markExerciseDone(exercise.exercisesID)}
-              >
-                ✅
-              </button>
-              <button
-                className="delete-button"
-                onClick={() => deleteExercise(exercise.exercisesID)}
-              >
-                🙅
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+          <select
+            className="input"
+            value={newDow}
+            onChange={(e) => setNewDow(e.target.value)}
+          >
+            <option></option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+          </select>
+          <input
+            className="input"
+            min={1} // fixed no negative numbers
+            type="number"
+            placeholder="reps"
+            value={newReps}
+            onChange={(e) => setNewReps(e.target.value)}
+          />
+          {/* <button onClick={}>Get</button> */}
+          <button
+            className={[
+              "todo-button",
+              "rocket",
+              rocketAnimating && "animateRocket",
+            ]
+              .filter((e) => e)
+              .join(" ")}
+            onClick={() => addExercise()}
+          >
+            🚀
+          </button>
+        </div>
+        {/* List of exercises (unordered list with list of exercises */}
+        <ul className="exercise-list">
+          {!exercises ? (
+            <h1>Loading...</h1>
+          ) : (
+            exercises.map((exercise) => {
+              return (
+                <li className="exercise" key={exercise.id}>
+                  <span
+                    className="exercise-description"
+                    style={{
+                      textDecoration: exercise.done
+                        ? "line-through"
+                        : undefined,
+                    }}
+                  >
+                    {exercise.dow} {exercise.exercise} {exercise.reps}
+                  </span>
+                  <button
+                    className="action-button"
+                    onClick={() => markExerciseDone(exercise.exercisesID)}
+                  >
+                    ✅
+                  </button>
+                  <button
+                    className="action-button"
+                    onClick={() => deleteExercise(exercise.exercisesID)}
+                  >
+                    🙅
+                  </button>
+                </li>
+              );
+            })
+          )}
+        </ul>
+      </div>
     </div>
   );
 }
