@@ -1,0 +1,11 @@
+rocket-sound.wav
+    This work is licensed under the Creative Commons 0 License.
+    https://freesound.org/people/Smokey9977/sounds/569563/
+
+celebrate.wav
+	This work is licensed under the Noncommercial 4.0 License.
+	https://freesound.org/people/acclivity/sounds/22952/
+
+explosion.wav
+	This work is licensed under the Creative Commons 0 License.
+	https://freesound.org/people/derplayer/sounds/587195/

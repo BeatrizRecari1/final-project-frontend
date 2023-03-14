@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./App.css";
 import "./Splash.css";
+import "./Background.css";
 import {
   auth,
   authenticateWithGoogle,
@@ -9,6 +10,9 @@ import {
   logout,
 } from "./firebase/firebase";
 import logo from "./logo.png";
+import rocketSound from "./assets/rocket-sound.wav";
+import clappingAudio from "./assets/celebrate2.wav";
+import deleteAudio from "./assets/explosion.wav";
 
 const host = "https://final-project-ed875.web.app";
 // const host = "http://localhost:5002";
@@ -32,6 +36,7 @@ function App() {
       return;
     }
     setRocketAnimating(true);
+    new Audio(rocketSound).play();
     setTimeout(() => {
       setRocketAnimating(false);
     }, 7000);
@@ -40,6 +45,7 @@ function App() {
       dow: newDow,
       reps: newReps,
       owner: user.uid,
+      done: false,
     };
     fetch(`${host}/exercises/${user.uid}`, {
       method: "POST",
@@ -81,6 +87,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         setExercises(data);
+        new Audio(deleteAudio).play();
       })
       .catch(alert);
 
@@ -94,13 +101,16 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setExercises(data);
+        new Audio(clappingAudio).play();
       })
       .catch(alert);
   }
 
   useEffect(() => {
     const getExercises = () => {
+      setExercises([]);
       if (!user) return;
       fetch(`${host}/exercises/${user.uid}`)
         .then((res) => res.json())
@@ -121,7 +131,11 @@ function App() {
       <div className="app credentials-page">
         <div className="main-content">
           <div className="logo-container column">
-            <img src={logo} />
+            <img className="logo" src={logo} />
+            <p className="slogan">
+              Where <span className="emphasized-text">PERFECT</span> practice
+              makes&nbsp;<span className="emphasized-text">PERFECT</span>
+            </p>
           </div>
           <div className="credentials column">
             <h1 className="main-title">Login</h1>

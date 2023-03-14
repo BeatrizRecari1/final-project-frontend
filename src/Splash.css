@@ -1,14 +1,17 @@
 .credentials-page .main-content {
     width: 90vw;
-    max-width: initial;
+    max-width: 90vw;
     flex-direction: row;
     background-color: initial;
+    flex-wrap: wrap;
+    
 }
 
 .credentials-page .main-content .column {
-    flex-basis: 0;
-    min-width: 0;
+    /* flex-basis: 0;
+    min-width: 0;  */
     flex-grow: 1;
+
 
 }
 
@@ -16,7 +19,7 @@
     flex-grow: initial;
     min-width: initial;
     flex-basis: initial;
-
+   
 }
 
 .credentials {
@@ -27,6 +30,7 @@
     font-size: 2em;
     /* background-color: rgb(13, 13, 39); */
     padding: 1rem;
+   
 }
 
 .action-buttons {
@@ -61,4 +65,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: 2.5rem;
+
+}
+
+.logo {
+    max-width: 20rem;
+    filter: drop-shadow(3px 1px 21px #F98308);
+}
+
+.slogan {
+    font-size: 2rem;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
 }
